@@ -1,0 +1,18 @@
+[
+  { "name": "", "description": "", "quantity": 11 },
+  {
+    "name": "Strawberry Quartz",
+    "description": "Courage - Grounding - Passion",
+    "quantity": 1
+  },
+  {
+    "name": "Abalone",
+    "description": "Intuition - Empowerment - Inner Peace",
+    "quantity": 2
+  },
+  {
+    "name": "Freshwater Pearl",
+    "description": "Inner Wisdom - Balance - Protection from Negativity",
+    "quantity": 3
+  }
+]

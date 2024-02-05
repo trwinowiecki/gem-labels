@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gem Labels</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+      }
+      @page {
+        size: 8.5in 11in;
+        margin: 0;
+      }
+      .page {
+        position: relative;
+        width: 8.5in;
+        height: 11in;
+      }
+      .label-grid {
+        padding: 0.63in 0.73in 0 0.73in;
+        display: grid;
+        grid-template-columns: repeat(4, 1.5in);
+        grid-template-rows: repeat(8, 1in);
+        grid-gap: 0.25in 0.35in;
+        justify-items: center;
+        align-items: center;
+      }
+      .label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4pt;
+        padding: 6px;
+      }
+      .label .title {
+        font-size: 12pt;
+        text-align: center;
+      }
+      .label .description {
+        font-size: 8pt;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript">
+      const createPage = () => {
+        const page = document.createElement('div');
+        page.classList.add('page');
+        page.appendChild(createLabelGrid());
+        return page;
+      };
+
+      const createLabel = (gem) => {
+        const label = document.createElement('div');
+        label.classList.add('label');
+        label.innerHTML = `
+        <span class="title">${gem.name}</span>
+        <span class="description">${gem.description}</span>
+      `;
+        return label;
+      };
+
+      const createPageBreak = () => {
+        const pageBreak = document.createElement('div');
+        pageBreak.classList.add('page-break');
+        return pageBreak;
+      };
+
+      const createLabelGrid = () => {
+        const labelGrid = document.createElement('div');
+        labelGrid.classList.add('label-grid');
+        return labelGrid;
+      };
+
+      const addPages = (pages) => {
+        pages.forEach((page, index) => {
+          document.body.appendChild(page);
+          if (index < pages.length - 1) {
+            document.body.appendChild(createPageBreak());
+          }
+        });
+      };
+
+      const createAllLabels = (gems) => {
+        const labels = [];
+        gems.forEach((gem) => {
+          for (let i = 0; i < gem.quantity; i++) {
+            labels.push(createLabel(gem));
+          }
+        });
+        return labels;
+      };
+
+      fetch('gem-data.json')
+        .then((response) => {
+          return response.json();
+        })
+        .then((gems) => {
+          const labelsPerPage = 32;
+
+          const pages = [];
+          let currentPage = createPage();
+          pages.push(currentPage);
+
+          const labels = createAllLabels(gems);
+
+          labels.forEach((label, index) => {
+            const labelGrid = currentPage.querySelector('.label-grid');
+            labelGrid.appendChild(label);
+
+            if (
+              labelGrid.childElementCount === labelsPerPage &&
+              index < labels.length - 1
+            ) {
+              currentPage = createPage();
+              pages.push(currentPage);
+            }
+          });
+
+          addPages(pages);
+        });
+    </script>
+  </body>
+</html>
